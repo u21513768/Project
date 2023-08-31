@@ -1,0 +1,432 @@
+/*Quintin d'Hotman de Villiers u21513768*/
+/* Global Reset for All Elements */
+/** {
+    margin: 0;
+    padding: 0;
+    border: none;
+}*/
+
+/* Setting font size and family for the entire body */
+body {
+    font-size: 14px;
+    font-family: 'Raleway', sans-serif;
+    /*font-family: 'Open Sans', Serif;*/
+    transition: 333ms;
+}
+
+/* Removing underline from anchor tags */
+a {
+    text-decoration: none;
+}
+
+/* Styling for Sections */
+.section {
+    height: 100vh;
+    /* Set sections to occupy full viewport height */
+    min-height: 500px;
+    /* Set minimum height to 500px to avoid very short sections */
+    position: relative;
+    /* Use relative positioning for section containers */
+}
+
+/* Styling for Content Containers */
+.content-container {
+    position: absolute;
+    /* Use absolute positioning for content containers inside sections */
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    /* Set a low z-index to ensure content containers are behind other elements */
+    clip: rect(auto, auto, auto, auto);
+    pointer-events: none;
+}
+
+/* Styling for Content Inner */
+.content-inner {
+    position: fixed;
+    /* Use fixed positioning to create parallax effect */
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    padding: 0;
+    z-index: 1;
+    /* Set a low z-index for content inner to keep it behind other elements */
+    -webkit-transform: translateZ(0);
+    /* Hardware acceleration for smoother animations on some browsers */
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    /* Improve performance on some browsers */
+    backface-visibility: hidden;
+    will-change: transform;
+    /* Optimize for smoother animations */
+    -webkit-perspective: 1000;
+    /* Optimize for smoother animations */
+    perspective: 1000;
+    pointer-events: all;
+    /* Allow pointer events on content inner */
+}
+
+/* Centering content inside sections */
+.content-center {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-family: 'Raleway', sans-serif;
+    text-transform: uppercase;
+    z-index: 1;
+}
+
+.content-center p{
+    color: rgb(222, 232, 240);
+}
+
+/* Aesthetics for top section background */
+#top-section {
+    /*background: linear-gradient(135deg, #ffffff 0%, #2986F0 100%);*/
+    background: linear-gradient(135deg, #9B5F5B 0%, #115F83 50%, #092E49 75%, #0E152F 100%);
+    
+    /*#f4583a 0%,#cd1e38 100%);*/
+}
+
+.top-section {
+    background: url('images/spray.jpg');
+    background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Aesthetics for bottom section background */
+.bottom-section {
+    background: linear-gradient(135deg, #50615c 0%, #000000 100%);
+    /*background: #3F4C48;
+    /*#d4fef2;*/
+}
+
+/* Styling for h1 elements inside sections */
+@media (min-width: 767px) {
+    .content-container h1 {
+        font-size: 75px;
+        font-weight: 900;
+        text-align: center;
+    }
+
+    /* Styling for p and a elements inside sections */
+    .content-container p {
+        font-weight: 700;
+        letter-spacing: 7px;
+        text-align: center;
+    }
+
+}
+
+.content-container h1 {
+    text-align: center;
+}
+
+/* Styling for p and a elements inside sections */
+.content-container p {
+    text-align: center;
+}
+
+/* Styling for dark theme content */
+.content-theme-dark h1 {
+    color: #052127;
+    /*#E33E39;*/
+    text-shadow: 0 20px 40px rgba(0, 0, 0, .5);
+
+}
+
+.content-theme-dark p {
+    /*color: #313d3f;*/
+    color: #898F9A
+    /*#FEA98D;*/
+}
+
+.content-theme-splash h1 {
+    color: #052127;
+    /*#E33E39;*/
+    text-shadow: 0 20px 40px rgba(255, 255, 255, 0.5);
+
+}
+
+.content-theme-splash p {
+    color: rgb(222, 232, 240);
+    /*#FEA98D;*/
+}
+
+/* Styling for light theme content */
+.content-theme-light h1 {
+    color: #020C0E;
+    z-index: 2;
+    /*#062930;*/
+    text-shadow: 0 20px 40px rgba(73, 73, 73, 0.5)
+}
+
+.content-theme-light p {
+    color: rgb(22, 20, 20);
+    z-index: 2;
+    /* #728E93;*/
+    text-shadow: 0 20px 40px rgb(255, 255, 255);
+}
+
+/* Additional Styling for the "text" div */
+#text {
+    z-index: 90;
+    /* Set a higher z-index value to display it in front of other elements */
+    position: absolute;
+    /* Use absolute positioning to place the "text" div */
+    letter-spacing: initial;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 20px;
+    /* Add some padding to make the content visible */
+    color: #fff;
+    /* Set a color for the text, adjust as needed */
+    /*background-color: rgba(0, 0, 0, 0.7); /* Set a background color, adjust transparency as needed */
+}
+
+.top-text {
+    text-align: left;
+    position: absolute;
+    top: 0;
+}
+
+#bottom-text {
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.bubble {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    /* Replace with your desired bubble color */
+    opacity: .5;
+    animation: floatAnimation 10s infinite linear;
+    /* Adjust the animation duration as needed */
+}
+
+.bottom-text>.bubble {
+    background-color: #3F4C48;
+}
+
+
+@keyframes floatAnimation {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(0%);
+        opacity: 0;
+    }
+}
+
+/* Arrange the bubbles at different starting points */
+.bubble:nth-child(1) {
+    top: 50px;
+    left: 90%;
+    animation-delay: 0s;
+}
+
+.bubble:nth-child(2) {
+    top: 150px;
+    left: 20%;
+    animation-delay: 1s;
+}
+
+.bubble:nth-child(3) {
+    top: 250px;
+    left: 30%;
+    animation-delay: 2s;
+}
+
+.bubble:nth-child(4) {
+    top: 100px;
+    left: 40%;
+    animation-delay: 3s;
+}
+
+.bubble:nth-child(5) {
+    top: 200px;
+    left: 15%;
+    animation-delay: 0, 5s;
+}
+
+.bubble:nth-child(6) {
+    top: 300px;
+    left: 25%;
+    animation-delay: 1.5s;
+}
+
+.bubble:nth-child(7) {
+    top: 0px;
+    left: 35%;
+    animation-delay: 2.5s;
+}
+
+.bubble:nth-child(8) {
+    top: 75px;
+    left: 45%;
+    animation-delay: 3.5s;
+}
+
+.bubble:nth-child(9) {
+    top: 400px;
+    left: 50%;
+    animation-delay: 1.2s;
+}
+
+.bubble:nth-child(10) {
+    top: 20px;
+    left: 55%;
+    animation-delay: 2.2s;
+}
+
+.bubble:nth-child(11) {
+    top: 450px;
+    left: 60%;
+    animation-delay: 3.2s;
+}
+
+.bubble:nth-child(12) {
+    top: 225px;
+    left: 65%;
+    animation-delay: 1.8s;
+}
+
+nav {
+    z-index: 99;
+    position: relative;
+}
+
+#scroll {
+    position: absolute;
+    bottom: 20px;
+    /* Adjust the value to set the desired distance from the bottom */
+    right: 50%;
+    /* Center the scroll div horizontally */
+    transform: translateX(50%);
+    z-index: 99;
+    color: #898F9A;
+}
+
+.arrow-icon {
+    animation: arrowDownAnimation 1.5s infinite;
+    /* Adjust the animation duration (2s) as needed for the desired speed of the animation */
+}
+
+@keyframes arrowDownAnimation {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(10px);
+        /* Adjust the value to set the distance the arrow moves down */
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.navbar-nav {
+    left: 0;
+    margin-left: auto !important;
+}
+
+.login-container {
+    z-index: 99;
+    position: absolute;
+    border-radius: 90px;
+    /*box-shadow: 30px 14px 28px rgba(0, 0, 5, .2), 0 10px 10px rgba(0, 0, 0, .2);*/
+    overflow: hidden;
+    opacity: 90%;
+    max-width: 100%;
+    transition: 333ms;
+}
+
+.transparent-to-white {
+    /*color: #252525;*/
+    color: rgb(222, 232, 240);
+    /*background: linear-gradient(to top,rgb(172,202,212) 0%,rgb(172,202,212) 50%,rgb(172,202,212) 75%, rgb(210,221,227, 0) 100%);
+    */
+    background-color: rgb(33,37,41, .5);
+    font-size: smaller;
+}
+
+.transparent-to-white>h1 {
+    font-weight: bolder;
+}
+
+.overlay-left {
+    background-color: #ffffff;
+    height: 100%;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay-right {
+    background-color: #27A5E7;
+    color: #FFFFFF;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.row {
+    height: 100%;
+    border-radius: 50px ;
+    overflow: auto;
+    --bs-gutter-x: 0rem !important;
+}
+
+.row-container {
+    height: 60%;
+
+}
+
+button {
+  transition: transform 80ms ease-in;
+}
+
+form {
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    height: 100;
+    position: relative;
+}
+
+.container {
+    position: absolute;
+    padding-top: 100px;
+    padding-left: 40px;
+}
+
+#features {
+    border-radius: 0px !important;
+}
+
+#article-navbar {
+    font-weight:600;
+    background-color: rgb(33,37,41, .5);
+}
+
+.navbar-text {
+    color: rgb(222, 232, 240) !important;
+}

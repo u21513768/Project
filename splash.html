@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Smooth Scroll Effect</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700,900|Open+Sans">
+    <!--/*Quintin d'Hotman de Villiers u21513768*/-->
+    <script>
+        // Function to check screen size and redirect if necessary
+        function checkScreenSize() {
+            var screenWidth = window.innerWidth;
+            
+            // Specify the minimum screen width for the HTML page to display
+            var minScreenWidth = 992; // Example: 768px (for tablet portrait)
+            
+            if (screenWidth < minScreenWidth) {
+                // Redirect to another PHP page
+                window.location.href = 'index.php';
+            }
+        }
+        
+        // Call the function on page load
+        window.onload = checkScreenSize;
+        window.addEventListener("resize", checkScreenSize);
+    </script>
+</head>
+
+<body>
+    <section class="section top-section">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+            <a class="navbar-brand h1 active" href="#"><i class="lni lni-connectdevelop"></i></a>
+            <a class="navbar-brand" href="#">Informed Insights</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+
+                    <a class="nav-item nav-link" href="index.php">Login</a>
+                    <a class="nav-item nav-link" href="index.php#sign-up">Sign Up</a>
+                </div>
+            </div>
+        </nav>
+        <nav class="navbar navbar-expand-lg px-3" id="article-navbar">
+            <div class="navbar-text">User-friendly Article Publishing &nbsp;</div>
+            <div class="navbar-brand">|</div>
+            <div class="navbar-text">Collaborative Networking &nbsp;</div>
+            <div class="navbar-brand">|</div>
+            <div class="navbar-text">Article Cur<span>ation and Discovery &nbsp;</span></div>
+            <div class="navbar-brand"><span>|</span></div><!--style="color: rgb(222, 232, 240);"-->
+            <div class="navbar-text"><span>Interactive E</span>ngagement &nbsp;</div>
+            <div class="navbar-brand">|</div>
+            <div class="navbar-text">Social Media Integration &nbsp;</div>
+            <div class="navbar-brand">|</div>
+            <div class="navbar-text">Free Membership</div>
+        </nav>
+        <div class="content-container content-theme-splash">
+            <div class="content-inner">
+                <div class="content-center">
+                    <h1>Informed Insights</h1>
+                    <p>Discover, Engage, Enlighten: Your Gateway to <!--<span style="color: rgb(222, 232, 240);"> </span>-->
+                        Knowledge</p>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                </div>
+            </div>
+        </div>
+        <div id="text">
+            <div class="transparent-to-white" id="bottom-text"><!--class="col-md-6 offset-md-3"-->
+                <div class="px-2 py-2">
+                    <h1>Our Mission</h1>
+                    <p class="px-3">
+                        We invite you to join our
+                        community of writers. We have created a space where you can
+                        freely express yourself, share your stories, and connect with
+                        others who share a passion for writing. Whether you're a seasoned writer or just starting,
+                        Informed Insights is the perfect platform for
+                        you to publish, discover, and promote articles on a wide range of topics. Be a part of our
+                        vibrant community and let your creativity shine!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

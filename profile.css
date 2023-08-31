@@ -1,0 +1,69 @@
+/*Quintin d'Hotman de Villiers u21513768*/
+body {
+    background: url('images/construction.jpg');
+    padding: 30px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #06263A;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    transition: 333ms;
+    font-size: 120%;
+    font-weight: 200%;
+}
+
+.content-container {
+    position: absolute;
+    /* Use absolute positioning for content containers inside sections */
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    /* Set a low z-index to ensure content containers are behind other elements */
+    clip: rect(auto, auto, auto, auto);
+    pointer-events: none;
+}
+
+/* Styling for Content Inner */
+.content-inner {
+    position: fixed;
+    /* Use fixed positioning to create parallax effect */
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    padding: 0;
+    z-index: 1;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+    pointer-events: all;
+}
+
+/* Centering content inside sections */
+.content-center {
+    height: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 20%;
+    padding-top: 40px;
+    padding-bottom: 30px;
+    z-index: 1;
+    background-color: rgba(175, 106, 17, 0.5);
+}
+
+h1 {
+    font-size: 200%;
+    background-color: ;
+}
+
+p {
+    font-weight: lighter;
+}
