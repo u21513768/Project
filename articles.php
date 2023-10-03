@@ -1,0 +1,260 @@
+<?php
+/*Quintin d'Hotman de Villiers u21513768*/
+// See all errors and warnings
+error_reporting(E_ALL);
+ini_set('error_reporting', E_ALL);
+
+$mysqli = mysqli_connect("localhost:3306", "u21513768", "yobsxklz", "u21513768");
+
+session_start();
+$email = isset($_POST["email"]) ? $_POST["email"] : $_SESSION["email"];
+$pass = isset($_POST["pass"]) ? $_POST["pass"] : $_SESSION["pass"];
+//echo "email: " . $email . "\npassword: " . $pass;
+if ($email == null || $email == "" || $pass == null || $pass == "") {
+    header("Location: index.php");
+}
+
+$query = "SELECT * FROM tbusers WHERE email = '$email' AND password = '$pass'";
+
+$res = mysqli_query($mysqli, $query);
+
+$row = mysqli_fetch_array($res);
+
+if ($row == null) {
+    header("Location: index.php");
+    exit;
+}
+
+$userid = $row["user_id"];
+$name = $row["name"];
+$username = $row["username"];
+
+$submit = isset($_POST['add-form']);
+if ($submit) {
+    session_start();
+
+    $_SESSION["email"] = $email;
+    $_SESSION["pass"] = $pass;
+    header("Location: article-form.php");
+    exit; // Make sure to exit after redirecting
+}
+
+?>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>IMY 220 - Assignment 2</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <!--<link rel="stylesheet" type="text/css" href="style.css" />-->
+    <link rel="stylesheet" href="articles.css">
+    <link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700,900|Open+Sans">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <meta charset="utf-8" />
+    <meta name="author" content="Name Surname">
+    <!-- Quintin d'Hotman de Villiers u21513768 -->
+
+</head>
+
+<body>
+    <div class='header-info'>
+        <nav class='navbar navbar-expand-lg navbar-dark px-3'>
+            <a class='navbar-brand' id='modal-click' href="profile.php?user_id=<?php echo $userid; ?>"><i
+                    class='lni lni-user'></i></a>
+            <a class='navbar-brand h1 active' href="profile.php?user_id=<?php echo $userid; ?>">
+                <?php echo $username; ?>
+            </a>
+            <a class='navbar-brand h1 active' href="users.php?user_id=<?php echo $userid; ?>">
+                Users
+            </a>
+            <div class='collapse navbar-collapse' id='navbarNavAltMarkup'>
+                <div class='navbar-nav px-2'>
+                    <a class='nav-item nav-link' href='index.php'>Log Out</a>
+                </div>
+                <form id="redirectForm" action="article-form.php" method="POST">
+                    <input type="submit" class="btn btn-outline-light" value="Add article" name="add-form">
+                </form>
+            </div>
+        </nav>
+    </div>
+    <div class='container'>
+        <div class='sideSection'>
+            <input type="text" class="form-control" value="Search by Hashtag" name="search-hashtag">
+            <label for="categories">Select Category:</label>
+            <select id="categories" name="categories" class="form-control">
+                <option value="category1">Category 1</option>
+                <option value="category2">Category 2</option>
+                <option value="category3">Category 3</option>
+            </select>
+            <div class="row articleGalleryContainer">
+                <h1>Latest Global Articles</h1>
+                <hr />
+                <div class="articleGallery">
+                    <?php
+                    $query2 = "SELECT * FROM tbarticles ORDER BY date DESC"; //WHERE user_id = '$userid'";
+                    $res2 = $mysqli->query($query2);
+
+                    while ($row2 = mysqli_fetch_array($res2)) {
+                        $article_id = $row2['article_id'];
+                        $image_query = "SELECT * FROM tbgallery WHERE article_id = '$article_id'";
+                        $image_res = mysqli_query($mysqli, $image_query);
+
+                        if ($image_res) {
+                            $image_row = mysqli_fetch_array($image_res);
+                            if ($image_row) {
+                                // If image data is found, use the image from the database
+                                $image_src = $image_row['image_name'];
+                            } else {
+                                // If no image data is found, set a default image source
+                                $image_src = "default.jpg";
+                            }
+                        } else {
+                            // If the query fails, set a default image source
+                            $image_src = "default.jpg";
+                        }
+
+                        echo '
+					<div >
+						<div class="card">
+						<div id="logo"  class="card-img-top"><img src="./gallery/' . ($image_src ?? 'default.jpg') . '"  class="card-img-top" alt="Article Image"></div>
+							<div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="article-details.php?article_id=' . $article_id . '&user_id=' . $userid . '">' . $row2['title'] . '</a>
+                                </h5>
+								<p class="card-text">' . $row2['description'] . '</p>
+								<p class="card-text"><small class="text-muted">' . $row2['author'] . ' - ' . $row2['date'] . '</small></p>
+							</div>
+						</div>
+					</div><hr/>';
+                    }
+                    ?>
+                </div>
+            </div>
+            <br />
+            <hr />
+            <br />
+            <div class="row articleGalleryContainer">
+                <h1>Your Articles</h1>
+                <hr />
+                <div class="articleGallery">
+                    <?php
+                    $query2 = "SELECT * FROM tbarticles WHERE user_id = '$userid' ORDER BY date DESC"; //WHERE user_id = '$userid'";
+                    $res2 = $mysqli->query($query2);
+
+                    while ($row2 = mysqli_fetch_array($res2)) {
+                        $article_id = $row2['article_id'];
+                        $image_query = "SELECT * FROM tbgallery WHERE article_id = '$article_id'";
+                        $image_res = mysqli_query($mysqli, $image_query);
+
+                        if ($image_res) {
+                            $image_row = mysqli_fetch_array($image_res);
+                            if ($image_row) {
+                                // If image data is found, use the image from the database
+                                $image_src = $image_row['image_name'];
+                            } else {
+                                // If no image data is found, set a default image source
+                                $image_src = "default.jpg";
+                            }
+                        } else {
+                            // If the query fails, set a default image source
+                            $image_src = "default.jpg";
+                        }
+
+
+                        echo '
+					<div >
+						<div class="card">
+						<div id="logo"  class="card-img-top"><img src="./gallery/' . ($image_src ?? 'default.jpg') . '"  class="card-img-top" alt="Article Image"></div>
+							<div class="card-body">
+								<h5 class="card-title">' . $row2['title'] . '</h5>
+								<p class="card-text">' . $row2['description'] . '</p>
+								<p class="card-text"><small class="text-muted">' . $row2['author'] . ' - ' . $row2['date'] . '</small></p>
+							</div>
+						</div>
+					</div><hr/>';
+                    }
+                    ?>
+                </div>
+            </div>
+
+            <br />
+            <hr />
+            <br />
+            <div class="row articleGalleryContainer">
+                <h1>Friend Articles</h1>
+                <hr />
+                <div class="articleGallery">
+                    <?php
+                    // Your existing code...
+                    
+                    // Fetch follow_ids from tbfriends where user_id is equal to $userid
+                    $followIdsQuery = "SELECT follow_id FROM tbfriends WHERE user_id = '$userid'";
+                    $followIdsResult = mysqli_query($mysqli, $followIdsQuery);
+
+                    if ($followIdsResult) {
+                        // Extract follow_ids from the result set
+                        $followIds = [];
+                        while ($row = mysqli_fetch_assoc($followIdsResult)) {
+                            $followIds[] = $row['follow_id'];
+                        }
+
+                        // Use the follow_ids to fetch articles from tbarticles
+                        $followIdsString = implode(',', $followIds);
+                        $friendArticlesQuery = "SELECT * FROM tbarticles WHERE user_id IN ($followIdsString) ORDER BY date DESC";
+                        $friendArticlesResult = mysqli_query($mysqli, $friendArticlesQuery);
+
+                        if ($friendArticlesResult) {
+                            // Fetch and display articles written by friends
+                            while ($row2 = mysqli_fetch_array($friendArticlesResult)) {
+                                $article_id = $row2['article_id'];
+                                $image_query = "SELECT * FROM tbgallery WHERE article_id = '$article_id'";
+                                $image_res = mysqli_query($mysqli, $image_query);
+
+                                if ($image_res) {
+                                    $image_row = mysqli_fetch_array($image_res);
+                                    if ($image_row) {
+                                        // If image data is found, use the image from the database
+                                        $image_src = $image_row['image_name'];
+                                    } else {
+                                        // If no image data is found, set a default image source
+                                        $image_src = "default.jpg";
+                                    }
+                                } else {
+                                    // If the query fails, set a default image source
+                                    $image_src = "default.jpg";
+                                }
+
+
+                                echo '
+                                <div >
+                                    <div class="card">
+                                    <div id="logo"  class="card-img-top"><img src="./gallery/' . ($image_src ?? 'default.jpg') . '"  class="card-img-top" alt="Article Image"></div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">' . $row2['title'] . '</h5>
+                                            <p class="card-text">' . $row2['description'] . '</p>
+                                            <p class="card-text"><small class="text-muted">' . $row2['author'] . ' - ' . $row2['date'] . '</small></p>
+                                        </div>
+                                    </div>
+                                </div><hr/>';
+                            }
+                        } else {
+                            echo "Error: " . mysqli_error($mysqli);
+                        }
+                    } else {
+                        echo "Error: " . mysqli_error($mysqli);
+                    }
+
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

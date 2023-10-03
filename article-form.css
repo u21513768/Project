@@ -1,0 +1,102 @@
+/*Quintin d'Hotman de Villiers u21513768*/
+body {
+    font-family: 'Open Sans', Serif;
+    transition: 333ms;
+}
+
+.container {
+    display: flex;
+    padding-left: 0px !important;
+    padding-right: 0px;
+    max-width: 100%;
+    position: relative;
+    z-index: 0;
+}
+
+.navbar {
+   position: relative; /* Ensure the position is set */
+   z-index: 0; /* Set a higher value to ensure it appears on top */
+}
+
+.navbar-nav {
+    left: 0;
+    margin-left: auto !important;
+}
+
+.articleGalleryContainer {
+    flex: 1;
+    padding: 20px;
+    background-color: #0D1317;
+    color: #9AA5A9;
+}
+
+.articleGallery {
+    max-height: 100vh;
+    overflow-y: auto;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;
+}
+
+.articleGallery::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+}
+
+.card {
+    margin-bottom: 20px;
+}
+
+.sideSection {
+    flex-basis: 70%;
+    background-color: #f3f3f3;
+    padding-top: 0px;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    box-sizing: border-box;
+}
+
+.header-info {
+    background-color: aqua;
+    height: 30vh;
+    background: url('images/spray.jpg');
+    background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.article-info {
+    padding: 20px;
+}
+
+
+#logo { 
+    max-height: 300px; 
+    max-width: 100%;
+    width:auto; 
+    overflow: hidden; 
+}
+
+#logo img { 
+    max-height: 100%; 
+    max-width: 100%;
+    width:auto; 
+    overflow: hidden; 
+}
+
+.card-title {
+    color: #A76C1F;
+}
+
+.card-title:hover {
+    color: #9AA5A9;
+}
+
+.card-text {
+    color: #5C6A73;
+}
+
+.card {
+    background-color: #0D1317;
+}
+
+.card:hover {
+    background-color: #13191d;
+}

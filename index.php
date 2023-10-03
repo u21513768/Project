@@ -6,13 +6,65 @@ ini_set('error_reporting', E_ALL);
 
 $mysqli = mysqli_connect("localhost:3306", "u21513768", "yobsxklz", "u21513768");
 
+$query = "SELECT * FROM tbusers";
+$res = mysqli_query($mysqli, $query);
+
+$users = array(); // Create an empty array to store users data
+
+while ($row = mysqli_fetch_assoc($res)) {
+    // Add user data to the users array
+    $users[] = $row;
+}
+
+// Convert the PHP array to a JSON string
+$jsonData = json_encode($users, JSON_PRETTY_PRINT);
+
+// Write the JSON data to a file
+file_put_contents('users.json', $jsonData);
+
+$query = "SELECT * FROM tbarticles";
+$res = mysqli_query($mysqli, $query);
+
+$users = array(); // Create an empty array to store users data
+
+while ($row = mysqli_fetch_assoc($res)) {
+    // Add user data to the users array
+    $users[] = $row;
+}
+
+// Convert the PHP array to a JSON string
+$jsonData = json_encode($users, JSON_PRETTY_PRINT);
+
+// Write the JSON data to a file
+file_put_contents('articles.json', $jsonData);
+
+$query = "SELECT * FROM tbgallery";
+$res = mysqli_query($mysqli, $query);
+
+$users = array(); // Create an empty array to store users data
+
+while ($row = mysqli_fetch_assoc($res)) {
+    // Add user data to the users array
+    $users[] = $row;
+}
+
+// Convert the PHP array to a JSON string
+$jsonData = json_encode($users, JSON_PRETTY_PRINT);
+
+// Write the JSON data to a file
+file_put_contents('gallery.json', $jsonData);
+
 $submit = isset($_POST['submit']);
 if ($submit) {
     $name = $_POST["name"];
+    $surname = $_POST["surname"];
     $email = $_POST["email"];
+    $birthday = $_POST["birthday"];
     $pass = $_POST["pass"];
-    if ($name != null && $name != "" && $email != null && $email != "" && $pass != null && $pass != "") {
-        $query = "INSERT INTO tbusers (name, email, password) VALUES ('$name', '$email', '$pass');";
+    $username = $_POST["username"];
+
+    if ($name != null && $name != "" && $email != null && $email != "" && $pass != null && $pass != "" && $birthday != null && $birthday != "" && $surname != null && $surname != "") {
+        $query = "INSERT INTO tbusers (username, name, surname, email, birthday, password) VALUES ('$username', '$name', '$surname', '$email', '$birthday', '$pass');";
 
         $res = mysqli_query($mysqli, $query) == TRUE;
         if ($res) {
@@ -21,7 +73,7 @@ if ($submit) {
 
             $_SESSION["email"] = $email;
             $_SESSION["pass"] = $pass;
-            header("Location: login.php");
+            header("Location: articles.php");
             exit; // Make sure to exit after redirecting
         }
         else {
@@ -102,7 +154,7 @@ if ($submit) {
                 <div class="row px-0 py-0">
                     <div class="col-6 px-0">
                         <div class="overlay-left px-3 py-3 ">
-                            <form action="login.php" method="POST">
+                            <form action="articles.php" method="POST">
                                 <h1 class="text-center">Login</h1>
                                 <div class="form-group">
                                     <label for="InputEmail1">Email address</label>
@@ -119,7 +171,7 @@ if ($submit) {
                                 </div>
                                 <br />
                                 <div class="text-center">
-                                    <input type="submit" class="btn btn-primary" value="Submit"/>
+                                    <input type="submit" class="btn btn-blue" value="Submit"/>
                                 </div>
                             </form>
                         </div>
@@ -129,7 +181,7 @@ if ($submit) {
                             <div class="my-auto">
                                 <h1>Create Account!</h1>
                                 <p>Sign up if you still don't have an account... </p>
-                                <a href="#sign-up" class="btn btn-primary" id="sign-in-button">Sign up</a>
+                                <a href="#sign-up" class="btn btn-blue" id="sign-in-button">Sign up</a>
                             </div>
                         </div>
                     </div>
@@ -165,12 +217,25 @@ if ($submit) {
                         <input type="text" class="form-control" id="inputName" aria-describedby="nameHelp"
                             placeholder="Enter name" name="name">
                     </div>
+                    <div class="form-group">
+                        <label for="InputSurname">Surname</label>
+                        <input type="text" class="form-control" id="InputSurname" aria-describedby="surnameHelp" placeholder="Enter surname" name="surname">
+                    </div>
                     <br />
                     <div class="form-group">
                         <label for="InputEmail2">Email address</label>
                         <input type="email" class="form-control" id="InputEmail2" aria-describedby="emailHelp" placeholder="Enter email" name="email">
                         <small id="emailHelp" class="form-text text-danger ">We'll never share your email with anyone
                             else.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="InputBirthday">Birthday</label>
+                        <input type="date" class="form-control" id="InputBirthday" aria-describedby="birthdayHelp" placeholder="Enter birthday" name="birthday">
+                    </div><br/>
+                    <div class="form-group">
+                        <label for="inputUsername">Username</label>
+                        <input type="text" class="form-control" id="inputUsername" aria-describedby="usernameHelp"
+                            placeholder="Enter Username" name="username">
                     </div>
                     <div class="form-group">
                         <label for="InputPassword2">Password</label>
@@ -181,7 +246,7 @@ if ($submit) {
                         <label class="form-check-label" for="Check2">Show Password</label>
                     </div>
                     <br />
-                    <input type="submit" class="btn btn-primary" name="submit" value="Sign Up"/>
+                    <input type="submit" class="btn btn-blue" name="submit" value="Sign Up"/>
                 </form>
             </div>
         </div>

@@ -1,0 +1,38 @@
+[
+    {
+        "user_id": "14",
+        "username": "testUsername",
+        "name": "Test Name",
+        "surname": "Test Surname",
+        "email": "test@email.com",
+        "password": "test",
+        "birthday": "2023-10-01"
+    },
+    {
+        "user_id": "15",
+        "username": "john69",
+        "name": "John",
+        "surname": "Doe",
+        "email": "john.doe@gmail.com",
+        "password": "test",
+        "birthday": "2023-10-30"
+    },
+    {
+        "user_id": "16",
+        "username": "JaneTheMan",
+        "name": "Jane",
+        "surname": "Jimothy",
+        "email": "Jane@gmail.co.za",
+        "password": "test",
+        "birthday": "2023-10-31"
+    },
+    {
+        "user_id": "17",
+        "username": "fluffyTDS",
+        "name": "Quintin",
+        "surname": "Hotman",
+        "email": "u21513768@tuks.co.za",
+        "password": "test",
+        "birthday": "2023-11-02"
+    }
+]
