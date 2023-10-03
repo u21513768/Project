@@ -123,6 +123,7 @@ if ($submit) {
 						<div class="card">
 						<div id="logo"  class="card-img-top"><img src="./gallery/' . ($image_src ?? 'default.jpg') . '"  class="card-img-top" alt="Article Image"></div>
 							<div class="card-body">
+                            <button class="btn btn-primary add-to-list-btn" data-article-id="' . $article_id . '">Add to List</button>
                                 <h5 class="card-title">
                                     <a href="article-details.php?article_id=' . $article_id . '&user_id=' . $userid . '">' . $row2['title'] . '</a>
                                 </h5>
@@ -171,6 +172,7 @@ if ($submit) {
 						<div class="card">
 						<div id="logo"  class="card-img-top"><img src="./gallery/' . ($image_src ?? 'default.jpg') . '"  class="card-img-top" alt="Article Image"></div>
 							<div class="card-body">
+                            <button class="btn btn-primary add-to-list-btn" data-article-id="' . $article_id . '" >Add to List</button>
 								<h5 class="card-title">' . $row2['title'] . '</h5>
 								<p class="card-text">' . $row2['description'] . '</p>
 								<p class="card-text"><small class="text-muted">' . $row2['author'] . ' - ' . $row2['date'] . '</small></p>
@@ -252,8 +254,159 @@ if ($submit) {
                     ?>
                 </div>
             </div>
+            <?php
+            // Your existing code...
+            
+            // Fetch list_ids from tblist where user_id is equal to $userid
+            $listIdsQuery = "SELECT list_id, name FROM tblist WHERE user_id = '$userid'";
+            $listIdsResult = mysqli_query($mysqli, $listIdsQuery);
+
+            if ($listIdsResult) {
+                // Extract list_ids and list_names from the result set
+                while ($listRow = mysqli_fetch_assoc($listIdsResult)) {
+                    $listId = $listRow['list_id'];
+                    $listName = $listRow['name'];
+
+                    // Output the list name
+                    echo '<div class="row articleGalleryContainer">';
+                    echo '<h1>' . $listName . '</h1>';
+                    echo '<hr />';
+                    echo '<div class="articleGallery">';
+
+                    // Use the list_id to fetch corresponding article_ids from tblisttable
+                    $articleIdsQuery = "SELECT article_id FROM tblisttable WHERE list_id = '$listId'";
+                    $articleIdsResult = mysqli_query($mysqli, $articleIdsQuery);
+
+                    if ($articleIdsResult) {
+                        // Extract article_ids from the result set and display articles
+                        while ($articleRow = mysqli_fetch_assoc($articleIdsResult)) {
+                            $articleId = $articleRow['article_id'];
+
+                            // Fetch article details and image from tbarticles and tbgallery based on $articleId
+                            $articleDetailsQuery = "SELECT * FROM tbarticles WHERE article_id = '$articleId'";
+                            $articleDetailsResult = mysqli_query($mysqli, $articleDetailsQuery);
+
+                            $imageQuery = "SELECT * FROM tbgallery WHERE article_id = '$articleId'";
+                            $imageResult = mysqli_query($mysqli, $imageQuery);
+
+                            if ($articleDetailsResult && $imageResult) {
+                                // Display article details and image
+                                while ($articleDetailsRow = mysqli_fetch_assoc($articleDetailsResult)) {
+                                    $title = $articleDetailsRow['title'];
+                                    $description = $articleDetailsRow['description'];
+                                    $author = $articleDetailsRow['author'];
+                                    $date = $articleDetailsRow['date'];
+
+                                    // Fetch image source
+                                    $imageRow = mysqli_fetch_assoc($imageResult);
+                                    $image_src = ($imageRow && $imageRow['image_name']) ? $imageRow['image_name'] : 'default.jpg';
+
+                                    // Output the article details and image
+                                    echo '<div class="card">';
+                                    echo '<div id="logo" class="card-img-top"><img src="./gallery/' . $image_src . '" class="card-img-top" alt="Article Image"></div>';
+                                    echo '<div class="card-body">';
+                                    echo '<h5 class="card-title">' . $title . '</h5>';
+                                    echo '<p class="card-text">' . $description . '</p>';
+                                    echo '<p class="card-text"><small class="text-muted">' . $author . ' - ' . $date . '</small></p>';
+                                    echo '</div>';
+                                    echo '</div>';
+                                }
+                            } else {
+                                echo "Error: " . mysqli_error($mysqli);
+                            }
+                        }
+                    } else {
+                        echo "Error: " . mysqli_error($mysqli);
+                    }
+
+                    echo '</div>';
+                    echo '</div>';
+                }
+            } else {
+                echo "Error: " . mysqli_error($mysqli);
+            }
+
+            // Rest of your code...
+            ?>
+
+
         </div>
     </div>
+
+    <!-- Modal for adding to list -->
+    <div class="modal fade" id="listModal" tabindex="-1" role="dialog" aria-labelledby="listModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="listModalLabel">Add to List</h5>
+                    <button type="button" class="close" id="close-modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="listForm">
+                        <div class="form-group">
+                            <label for="existingLists">Choose Existing List:</label>
+                            <select class="form-control" id="existingLists" name="existingList">
+                                <!-- Options for existing lists will be populated here using PHP -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="newListName">Or Create New List:</label>
+                            <input type="text" class="form-control" id="newListName" name="newListName">
+                        </div>
+                        <!-- Add more form fields if needed -->
+                        <input type="hidden" id="userIdInput" name="userId">
+                        <input type="hidden" id="articleIdInput" name="articleId">
+                        <button type="submit" class="btn btn-primary">Add to List</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript code to handle button click event and form submission
+        $('.add-to-list-btn').click(function () {
+            var articleId = $(this).data('article-id');
+            $('#articleIdInput').val(articleId);
+            $('#userIdInput').val(<?php echo $userid; ?>);
+
+
+            $.ajax({
+                type: 'GET',
+                url: 'get-lists.php', // PHP script to fetch existing lists
+                success: function (response) {
+                    $('#existingLists').html(response); // Populate existing lists in the dropdown
+                }
+            });
+
+            $('#listModal').modal('show');
+        });
+
+        $('#close-modal').click(function () {
+            $('#listModal').modal('hide');
+        });
+
+        $('#listForm').submit(function (event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url: 'add-to-list.php', // PHP script to process the form data
+                data: formData,
+                success: function (response) {
+                    // Handle the response, e.g., show success message or reload the page
+                    console.log(response);
+                    alert(response);
+                }
+            });
+            $('#listModal').modal('hide'); // Close the modal after form submission
+        });
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

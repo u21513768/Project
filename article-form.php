@@ -174,7 +174,7 @@ if ($submitbutton) {
 						$image_res = mysqli_query($mysqli, $image_query);
 						$image_row = mysqli_fetch_array($image_res);
 						$image_src = $image_row['image_name'];
-						$image_src = $image_src == "" ? "default.jpg" : $image_src;
+						$image_src = $image_src == ("" || null) ? "default.jpg" : $image_src;
 
 						echo '
 					<div class="col-md-12 mb-12">
