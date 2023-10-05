@@ -199,20 +199,15 @@ if ($submit) {
                 <hr />
                 <div class="articleGallery">
                     <?php
-                    // Your existing code...
-                    
-                    // Fetch follow_ids from tbfriends where user_id is equal to $userid
                     $followIdsQuery = "SELECT follow_id FROM tbfriends WHERE user_id = '$userid'";
                     $followIdsResult = mysqli_query($mysqli, $followIdsQuery);
 
                     if ($followIdsResult) {
-                        // Extract follow_ids from the result set
                         $followIds = [];
                         while ($row = mysqli_fetch_assoc($followIdsResult)) {
                             $followIds[] = $row['follow_id'];
                         }
 
-                        // Use the follow_ids to fetch articles from tbarticles
                         $followIdsString = implode(',', $followIds);
                         $friendArticlesQuery = "SELECT * FROM tbarticles WHERE user_id IN ($followIdsString) ORDER BY date DESC";
                         $friendArticlesResult = mysqli_query($mysqli, $friendArticlesQuery);
@@ -227,14 +222,11 @@ if ($submit) {
                                 if ($image_res) {
                                     $image_row = mysqli_fetch_array($image_res);
                                     if ($image_row) {
-                                        // If image data is found, use the image from the database
                                         $image_src = $image_row['image_name'];
                                     } else {
-                                        // If no image data is found, set a default image source
                                         $image_src = "default.jpg";
                                     }
                                 } else {
-                                    // If the query fails, set a default image source
                                     $image_src = "default.jpg";
                                 }
 
@@ -268,34 +260,26 @@ if ($submit) {
                 </div>
             </div>
             <?php
-            // Your existing code...
-            
-            // Fetch list_ids from tblist where user_id is equal to $userid
             $listIdsQuery = "SELECT list_id, name FROM tblist WHERE user_id = '$userid'";
             $listIdsResult = mysqli_query($mysqli, $listIdsQuery);
 
             if ($listIdsResult) {
-                // Extract list_ids and list_names from the result set
                 while ($listRow = mysqli_fetch_assoc($listIdsResult)) {
                     $listId = $listRow['list_id'];
                     $listName = $listRow['name'];
 
-                    // Output the list name
                     echo '<div class="row articleGalleryContainer">';
                     echo '<h1>' . $listName . '</h1>';
                     echo '<hr />';
                     echo '<div class="articleGallery">';
 
-                    // Use the list_id to fetch corresponding article_ids from tblisttable
                     $articleIdsQuery = "SELECT article_id FROM tblisttable WHERE list_id = '$listId'";
                     $articleIdsResult = mysqli_query($mysqli, $articleIdsQuery);
 
                     if ($articleIdsResult) {
-                        // Extract article_ids from the result set and display articles
                         while ($articleRow = mysqli_fetch_assoc($articleIdsResult)) {
                             $articleId = $articleRow['article_id'];
 
-                            // Fetch article details and image from tbarticles and tbgallery based on $articleId
                             $articleDetailsQuery = "SELECT * FROM tbarticles WHERE article_id = '$articleId'";
                             $articleDetailsResult = mysqli_query($mysqli, $articleDetailsQuery);
 
@@ -303,18 +287,15 @@ if ($submit) {
                             $imageResult = mysqli_query($mysqli, $imageQuery);
 
                             if ($articleDetailsResult && $imageResult) {
-                                // Display article details and image
                                 while ($articleDetailsRow = mysqli_fetch_assoc($articleDetailsResult)) {
                                     $title = $articleDetailsRow['title'];
                                     $description = $articleDetailsRow['description'];
                                     $author = $articleDetailsRow['author'];
                                     $date = $articleDetailsRow['date'];
 
-                                    // Fetch image source
                                     $imageRow = mysqli_fetch_assoc($imageResult);
                                     $image_src = ($imageRow && $imageRow['image_name']) ? $imageRow['image_name'] : 'default.jpg';
 
-                                    // Output the article details and image
                                     echo '<div class="card">';
                                     echo '<div id="logo" class="card-img-top"><img src="./gallery/' . $image_src . '" class="card-img-top" alt="Article Image"></div>';
                                     echo '<div class="card-body">';
@@ -349,7 +330,6 @@ if ($submit) {
         </div>
     </div>
 
-    <!-- Modal for adding to list -->
     <div class="modal fade" id="listModal" tabindex="-1" role="dialog" aria-labelledby="listModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -365,14 +345,12 @@ if ($submit) {
                         <div class="form-group">
                             <label for="existingLists">Choose Existing List:</label>
                             <select class="form-control" id="existingLists" name="existingList">
-                                <!-- Options for existing lists will be populated here using PHP -->
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="newListName">Or Create New List:</label>
                             <input type="text" class="form-control" id="newListName" name="newListName">
                         </div>
-                        <!-- Add more form fields if needed -->
                         <input type="hidden" id="userIdInput" name="userId">
                         <input type="hidden" id="articleIdInput" name="articleId">
                         <button type="submit" class="btn btn-primary">Add to List</button>
@@ -383,7 +361,6 @@ if ($submit) {
     </div>
 
     <script>
-        // JavaScript code to handle button click event and form submission
         $('.add-to-list-btn').click(function () {
             var articleId = $(this).data('article-id');
             $('#articleIdInput').val(articleId);
@@ -413,12 +390,11 @@ if ($submit) {
                 url: 'add-to-list.php', // PHP script to process the form data
                 data: formData,
                 success: function (response) {
-                    // Handle the response, e.g., show success message or reload the page
                     console.log(response);
                     alert(response);
                 }
             });
-            $('#listModal').modal('hide'); // Close the modal after form submission
+            $('#listModal').modal('hide'); 
         });
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>

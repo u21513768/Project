@@ -188,15 +188,12 @@ if ($submit) {
                     if ($articlesResult) {
                         $articles = mysqli_fetch_all($articlesResult, MYSQLI_ASSOC);
 
-                        // Split the articles into pairs
                         $articlePairs = array_chunk($articles, 3);
 
-                        // Iterate through pairs and create carousel items
                         foreach ($articlePairs as $index => $pair) {
                             echo '<div class="carousel-item ' . ($index === 0 ? 'active' : '') . '">
                             <div class="row">';
 
-                            // Display two items in each carousel item
                             foreach ($pair as $article) {
                                 $article_id = $article["article_id"];
                                 $title = $article["title"];
@@ -204,7 +201,6 @@ if ($submit) {
                                 $author = $article["author"];
                                 $date = $article["date"];
 
-                                // Card structure for each article
                                 echo '<div class="col-md-4 mb-3">
                                     <div class="card mx-2">
                                         <div class="card-body">
@@ -245,20 +241,15 @@ if ($submit) {
         </div>
     </div>
 
-    <!-- Modal for Edit User Info -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <!-- Modal Header -->
                 <div class="modal-header">
                     <h5 class="modal-title" id="editModalLabel">Edit User Information</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <!-- Modal Body (Edit Form) -->
                 <div class="modal-body">
-                    <!-- Add your edit form fields here -->
                     <form id="editForm">
-                        <!-- Edit form fields go here -->
                         <div class="mb-3">
                             <label for="editUsername" class="form-label">Username</label>
                             <input type="text" class="form-control" id="editUsername" name="editUsername"
@@ -279,33 +270,25 @@ if ($submit) {
 
 
     <script>
-        // Wait for the document to be fully loaded
         $(document).ready(function () {
-            // When Edit button is clicked, show the modal
             $('#editBtn').click(function () {
                 $('#editModal').modal('show');
             });
 
-            // Submit the edit form
-            // Submit the edit form
             $('#editForm').submit(function (event) {
                 event.preventDefault();
 
-                // Get form data and perform an AJAX request to update user info in the database
                 var formData = $(this).serialize();
                 $.ajax({
                     type: 'POST',
-                    url: 'edit-user.php', // Specify the PHP script to handle form submission and database update
+                    url: 'edit-user.php', /
                     data: formData,
                     success: function (response) {
-                        // Handle success response, for example, show a success message or update the page
                         console.log('User info updated successfully');
                         alert('User info updated successfully');
-                        // Optionally, close the modal after successful update
                         $('#editModal').modal('hide');
                     },
                     error: function (error) {
-                        // Handle error response, for example, display an error message to the user
                         console.error('Error updating user info', error);
                         alert('Error updating user info', error);
                     }

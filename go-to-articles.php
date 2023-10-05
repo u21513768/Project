@@ -6,6 +6,6 @@ if ($submit) {
 	$_SESSION["email"] = $_POST['email'];
 	$_SESSION["pass"] = $_POST['pass'];
 	header("Location: articles.php");
-	exit; // Make sure to exit after redirecting
+	exit; 
 }
 ?>

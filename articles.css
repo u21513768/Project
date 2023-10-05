@@ -103,7 +103,7 @@ body {
     color: #CD1818;
 }
 .card-text {
-    color: #9AA5A9;
+    color: #454b4d;
 }
 
 .card {
@@ -117,7 +117,7 @@ body {
 }
 
 .form-control {
-    opacity: .4;
+    background-color: #ffffff40;
 }
 
 .btn-primary {
@@ -214,4 +214,15 @@ body {
     100% {
         transform: translateX(0);
     }
+}
+
+input[type="text"] {
+    color: #333 !important; /* Change the color to your desired text color */
+    /* Add other styles if needed */
+}
+
+/* Style for Text Areas */
+textarea {
+    color: #333 !important; /* Change the color to your desired text color */
+    /* Add other styles if needed */
 }

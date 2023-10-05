@@ -108,7 +108,7 @@ body {
 }
 
 .form-control {
-    opacity: .5;
+    background-color: #ffffff40;
 }
 
 .btn-primary {
@@ -119,4 +119,15 @@ body {
 .btn-primary:hover {
     background-color: #0a5253; /* Darker color on hover */
     border-color: #0a5253; /* Darker border color on hover */
+}
+
+input[type="text"] {
+    color: #333 !important; /* Change the color to your desired text color */
+    /* Add other styles if needed */
+}
+
+/* Style for Text Areas */
+textarea {
+    color: #333 !important; /* Change the color to your desired text color */
+    /* Add other styles if needed */
 }

@@ -44,9 +44,6 @@ if (isset($_GET['user_id']) && isset($_GET['friend_id'])) {
     $pfp_row = mysqli_fetch_array($pfp_res);
     $friend_image = $pfp_row ? $pfp_row['image_name'] : 'default.jpg'; // Default image if no entry is found
 
-    // Create an image tag with user's picture and username as a link
-
-
     $friendsQuery = "SELECT tbusers.* FROM tbusers
     INNER JOIN tbfriends ON tbusers.user_id = tbfriends.user_id
     WHERE tbfriends.user_id = '$friend_id'";
@@ -55,7 +52,6 @@ if (isset($_GET['user_id']) && isset($_GET['friend_id'])) {
     if ($friendsResult) {
         $friends = mysqli_fetch_all($friendsResult, MYSQLI_ASSOC);
     } else {
-        // Handle the query error
         echo "Error: " . mysqli_error($mysqli);
     }
 
@@ -67,12 +63,10 @@ if (isset($_GET['user_id']) && isset($_GET['friend_id'])) {
     if ($followsResult) {
         $follows = mysqli_fetch_all($followsResult, MYSQLI_ASSOC);
     } else {
-        // Handle the query error
         echo "Error: " . mysqli_error($mysqli);
     }
 
 } else {
-    // Handle the case where article_id or user_id is not set in the URL
     echo "User ID is not set.";
 }
 
@@ -83,7 +77,7 @@ if ($submit) {
     $_SESSION["email"] = $_POST['email'];
     $_SESSION["pass"] = $_POST['pass'];
     header("Location: articles.php");
-    exit; // Make sure to exit after redirecting
+    exit; 
 }
 ?>
 
@@ -133,9 +127,8 @@ if ($submit) {
                     $friendEmail = $friendRow["email"];
                     $friendBirthday = $friendRow["birthday"];
                     $friendUsername = $friendRow["username"];
-                    $friendImage = "gallery/$friend_image"; // Assuming $friend_image holds the image file name
+                    $friendImage = "gallery/$friend_image"; 
                 
-                    // Display friend user details
                     echo "<img src='$friendImage' alt='User Image' class='user-image' width='100' height='100'>";
                     echo "<span class='username'><h2 id='username'>$friendUsername</h2></span>";
                     echo "<br/><hr/><h4>User Info:</h4><strong>Name:</strong> $friendName<br>";
@@ -212,15 +205,12 @@ if ($submit) {
                     if ($articlesResult) {
                         $articles = mysqli_fetch_all($articlesResult, MYSQLI_ASSOC);
 
-                        // Split the articles into pairs
                         $articlePairs = array_chunk($articles, 3);
 
-                        // Iterate through pairs and create carousel items
                         foreach ($articlePairs as $index => $pair) {
                             echo '<div class="carousel-item ' . ($index === 0 ? 'active' : '') . '">
                             <div class="row">';
 
-                            // Display two items in each carousel item
                             foreach ($pair as $article) {
                                 $article_id = $article["article_id"];
                                 $title = $article["title"];
@@ -228,7 +218,6 @@ if ($submit) {
                                 $author = $article["author"];
                                 $date = $article["date"];
 
-                                // Card structure for each article
                                 echo '<div class="col-md-4 mb-3">
                                     <div class="card mx-2">
                                         <div class="card-body">
@@ -266,7 +255,6 @@ if ($submit) {
         ?>
         <br>
     </div>
-    <!-- Message Modal -->
     <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -277,7 +265,6 @@ if ($submit) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Message input form -->
                     <form id="messageForm">
                         <div class="mb-3">
                             <label for="messageContent" class="form-label">Message:</label>
@@ -296,19 +283,15 @@ if ($submit) {
             var user_id = <?php echo $user_id; ?>;
             var friend_id = <?php echo $friend_id; ?>;
 
-            // Send user_id and friend_id to PHP using AJAX
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "follow.php", true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && xhr.status == 200) {
-                    // Parse the response JSON
                     var response = JSON.parse(xhr.responseText);
                     if (response.success) {
-                        // If successful, display the alert
                         alert("Your friendship has been changed.");
                     } else {
-                        // Handle errors if any
                         alert("Failed to follow. Please try again later.");
                     }
                 }
@@ -316,19 +299,16 @@ if ($submit) {
             xhr.send("user_id=" + user_id + "&friend_id=" + friend_id);
         });
 
-        // Open message modal when the "Send Message" button is clicked
         document.getElementById("sendMessageBtn").addEventListener("click", function () {
             $('#messageModal').modal('show');
         });
 
-        // Handle form submission for sending messages
         document.getElementById("messageForm").addEventListener("submit", function (event) {
             event.preventDefault();
 
             var messageContent = document.getElementById("messageContent").value;
             var recipient_id = <?php echo $friend_id; ?>;
 
-            // Send message content and recipient_id to PHP using AJAX
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "message.php", true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -336,11 +316,9 @@ if ($submit) {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     var response = JSON.parse(xhr.responseText);
                     if (response.success) {
-                        // If successful, close the modal and display a success message
                         $('#messageModal').modal('hide');
                         alert("Message sent successfully!");
                     } else {
-                        // Handle errors if any
                         alert("Failed to send message. Please try again later.");
                     }
                 }

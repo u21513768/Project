@@ -30,7 +30,8 @@ $title = isset($_POST["articleName"]) ? $_POST["articleName"] : null;
 $name = $row["name"];
 $surname = $row["surname"];
 $author = $name . " " . $surname; //isset($_POST["articleAuthor"]) ? $_POST["articleAuthor"] : null;
-$description = isset($_POST["articleDescription"]) ? $_POST["articleDescription"] : null;
+$text = isset($_POST["articleDescription"]) ? $_POST["articleDescription"] : null;
+$description = isset($_POST["articleDesc"]) ? $_POST["articleDesc"] : null;
 $date = date('Y-m-d H:i:s');
 ; //isset($_POST["articleDate"]) ? $_POST["articleDate"] : null;
 $tags = isset($_POST["articleTags"]) ? $_POST["articleTags"] : null;
@@ -38,19 +39,18 @@ $tags = isset($_POST["articleTags"]) ? $_POST["articleTags"] : null;
 if ($description !== null && $tags !== null) {
 	$description .= "\nHashtags: " . $tags;
 }
-$secondQuery = "INSERT INTO tbarticles (user_id, title, description, author, date) VALUES ('$userid', '$title', '$description', '$author', '$date');";
+$secondQuery = "INSERT INTO tbarticles (user_id, title, description, author, date, article_text) VALUES ('$userid', '$title', '$description', '$author', '$date', '$text');";
 $submitbutton = isset($_POST['submit']);
 
 if ($submitbutton) {
 	if (isset($_FILES['picToUpload'])) {
-		if ($_FILES['picToUpload']['error'] === 0 || $_FILES['picToUpload']['error'] != 0) { //should eventually be ===
-			// compute the total size of the uploaded files
+		if ($_FILES['picToUpload']['error'] === 0 || $_FILES['picToUpload']['error'] != 0) { 
+			
 			$totalFileSize = $_FILES['picToUpload']['size'];
 			$maxFileSize = 10 * 1024 * 1024;
-			// check if the upload size is less than the max allowed
 			if ($totalFileSize > $maxFileSize) {
 				/*echo '<div class="alert alert-danger mt-3" role="alert">
-							Your files exceed the limit of 2MB capacity
+							Your files exceed the limit of 10MB capacity
 							</div>';*/
 			} else {
 				if (!empty($title) && !empty($description) && !empty($author) && !empty($date) && !empty($userid) || !($_FILES['picToUpload']['error'] == 4 || ($_FILES['picToUpload']['size'] == 0 && $_FILES['picToUpload']['error'] == 0))) {
@@ -71,11 +71,11 @@ if ($submitbutton) {
 
 						$destination = $galleryFolder . '/' . $fileName;
 						if (move_uploaded_file($uploadedFile, $destination)) {
-							/*echo "File has been moved to the gallery folder.";*/
+							echo "File has been moved to the gallery folder.";
 						} else {
-							/*echo '<div class="alert alert-danger mt-3" role="alert">
-												 Error moving the file.
-												 </div>';*/
+							echo '<div class="alert alert-danger mt-3" role="alert">
+								Error moving the file.
+								</div>';
 						}
 
 						$_SESSION["email"] = $email;
@@ -149,8 +149,10 @@ if ($submitbutton) {
 								<input type='hidden' class='form-control' name='email' value='" . $email . "' />
 								<input type='hidden' class='form-control' name='pass' value='" . $pass . "' />
 								<label for='articleName'>Article Name:</label><br>
-								<input type='text' class='form-control' name='articleName' /><br>							
-								<label for='articleDescription'>Article Description:</label><br>
+								<input type='text' class='form-control' name='articleName' /><br>	
+								<label for='articleDesc'>Article Description:</label><br>
+								<input type='text' class='form-control' name='articleDesc' /><br>							
+								<label for='articleDescription'>Article Text:</label><br>
 								<textarea class='form-control' id='description' name='articleDescription' rows='10'></textarea><br/>
 								<label for='articleTags'>Hashtags:</label><br>
 								<input type='text' class='form-control' name='articleTags' /><br>
@@ -202,7 +204,6 @@ if ($submitbutton) {
 					</div><hr/>';
 					}
 				} else {
-					// If no rows are returned, display a custom message
 					echo '<div class="col-md-12 mb-12"><p>No articles found.</p></div>';
 				}
 				?>
@@ -211,7 +212,6 @@ if ($submitbutton) {
 
 		<?php
 		if (isset($alertMessage)) {
-			// Output JavaScript to display an alert
 			echo "<script>showAlert('$alertMessage');</script>";
 		}
 		?>

@@ -29,7 +29,6 @@ if (isset($_GET['user_id'])) {
 
 
 } else {
-    // Handle the case where article_id or user_id is not set in the URL
     echo "User ID is not set.";
 }
 
@@ -40,7 +39,7 @@ if ($submit) {
     $_SESSION["email"] = $_POST['email'];
     $_SESSION["pass"] = $_POST['pass'];
     header("Location: articles.php");
-    exit; // Make sure to exit after redirecting
+    exit; 
 }
 ?>
 
@@ -80,13 +79,11 @@ if ($submit) {
                     while ($row = mysqli_fetch_array($res)) {
                         $friend_id = $row["user_id"];
                         $username = $row["username"];
-                        // Fetch image name from tbpfp table based on friend_id
                         $pfp_query = "SELECT image_name FROM tbpfp WHERE user_id = '$friend_id'";
                         $pfp_res = mysqli_query($mysqli, $pfp_query);
                         $pfp_row = mysqli_fetch_array($pfp_res);
                         $friend_image = $pfp_row ? $pfp_row['image_name'] : 'default.jpg'; // Default image if no entry is found
                 
-                        // Create an image tag with user's picture and username as a link
                         echo "<hr/><img src='gallery/$friend_image' alt='User Image' class='user-image' width='50' height='50'>";
                         echo "<a href='friend.php?user_id=$user_id&&friend_id=$friend_id'>$username</a><br>";
                     }

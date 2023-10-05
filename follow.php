@@ -1,6 +1,4 @@
 <?php
-// follow.php
-
 header("Content-type: application/json");
 
 if (isset($_POST['user_id']) && isset($_POST['friend_id'])) {
@@ -9,12 +7,10 @@ if (isset($_POST['user_id']) && isset($_POST['friend_id'])) {
 
     $mysqli = mysqli_connect("localhost:3306", "u21513768", "yobsxklz", "u21513768");
 
-    // Check if the friendship already exists
     $checkQuery = "SELECT * FROM tbfriends WHERE user_id = '$user_id' AND follow_id = '$friend_id'";
     $checkResult = mysqli_query($mysqli, $checkQuery);
 
     if (mysqli_num_rows($checkResult) > 0) {
-        // Friendship exists, delete the row from tbfriends table
         $deleteQuery = "DELETE FROM tbfriends WHERE user_id = '$user_id' AND follow_id = '$friend_id'";
         $deleteResult = mysqli_query($mysqli, $deleteQuery);
 
@@ -24,7 +20,6 @@ if (isset($_POST['user_id']) && isset($_POST['friend_id'])) {
             $response = array("success" => false, "message" => "Failed to remove friendship.");
         }
     } else {
-        // Friendship does not exist, insert into the tbfriends table
         $insertQuery = "INSERT INTO tbfriends (user_id, follow_id) VALUES ('$user_id', '$friend_id')";
         $insertResult = mysqli_query($mysqli, $insertQuery);
 
@@ -38,6 +33,5 @@ if (isset($_POST['user_id']) && isset($_POST['friend_id'])) {
     $response = array("success" => false, "message" => "Invalid parameters.");
 }
 
-// Send JSON response
 echo json_encode($response);
 ?>

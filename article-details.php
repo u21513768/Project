@@ -7,7 +7,6 @@ ini_set('error_reporting', E_ALL);
 $mysqli = mysqli_connect("localhost:3306", "u21513768", "yobsxklz", "u21513768");
 
 if (isset($_GET['article_id']) && isset($_GET['user_id'])) {
-    // Retrieve article_id and user_id from the URL
     $article_id = $_GET['article_id'];
     $user_id = $_GET['user_id'];
 
@@ -34,7 +33,6 @@ if (isset($_GET['article_id']) && isset($_GET['user_id'])) {
 
 
 } else {
-    // Handle the case where article_id or user_id is not set in the URL
     echo "Article ID or User ID is not set.";
 }
 
@@ -45,7 +43,7 @@ if ($submit) {
     $_SESSION["email"] = $_POST['email'];
     $_SESSION["pass"] = $_POST['pass'];
     header("Location: articles.php");
-    exit; // Make sure to exit after redirecting
+    exit; 
 }
 ?>
 
@@ -79,26 +77,17 @@ if ($submit) {
                 <input type="submit" class="btn btn-primary" value="Return" name="return">
             </form>
             <?php
-            // ... (previous PHP code remains unchanged)
-            
-            // Fetch the total number of reviews for the specific article
             $totalReviewsQuery = "SELECT COUNT(*) AS total_reviews FROM tbratings WHERE article_id = '$article_id'";
             $totalReviewsResult = mysqli_query($mysqli, $totalReviewsQuery);
             $totalReviewsRow = mysqli_fetch_assoc($totalReviewsResult);
             $totalReviews = $totalReviewsRow['total_reviews'];
 
-            // Fetch the number of positive reviews for the specific article (assuming '1' is positive)
             $positiveReviewsQuery = "SELECT COUNT(*) AS positive_reviews FROM tbratings WHERE article_id = '$article_id' AND rating = 1";
             $positiveReviewsResult = mysqli_query($mysqli, $positiveReviewsQuery);
             $positiveReviewsRow = mysqli_fetch_assoc($positiveReviewsResult);
             $positiveReviews = $positiveReviewsRow['positive_reviews'];
 
-            // ... (previous HTML and JavaScript code remains unchanged)
-            
-            // Output the total number of reviews and positive reviews
             echo "<hr/><p>$positiveReviews out of $totalReviews people liked this article</p><hr/>";
-
-            // ... (continue with the rest of your HTML and JavaScript code)
             ?>
 
             <div class="articleGallery">
@@ -106,14 +95,10 @@ if ($submit) {
                 $articleQuery = "SELECT * FROM tbarticles WHERE article_id = '$article_id'";
                 $articleResult = mysqli_query($mysqli, $articleQuery);
 
-                // Check if the query was successful
                 if ($articleResult) {
-                    // Fetch the article details from the result
                     $article = mysqli_fetch_assoc($articleResult);
 
-                    // Check if the article exists
                     if ($article) {
-                        // Display the article content in the articleGallery div
                         echo '<div >
                                     <div class="card-body">
                                         <h5 class="card-title">' . $article['title'] . '</h5>
@@ -142,11 +127,9 @@ if ($submit) {
                                     <button id="submitButton" class="btn btn-primary">Submit Review</button>
                                 </div>';
                     } else {
-                        // Handle the case where the article does not exist
                         echo "Article not found.";
                     }
                 } else {
-                    // Handle the case where the query failed
                     echo "Error fetching article.";
                 }
                 ?>
@@ -197,22 +180,18 @@ if ($submit) {
     <script>
         var radioButtons = document.querySelectorAll('input[name="articleLike1"]');
 
-        // Attach change event listener to radio buttons
         radioButtons.forEach(function (radioButton) {
             radioButton.addEventListener('change', function () {
-                // Get the selected value and its data-correct attribute
                 var selectedValue = document.querySelector('input[name="articleLike1"]:checked').value;
                 var isCorrect = document.querySelector('input[name="articleLike1"]:checked').parentElement.getAttribute('data-correct');
-                var user_id = <?php echo $user_id; ?>; // Get user_id from PHP variable
-                var article_id = <?php echo $article_id; ?>; // Get article_id from PHP variable
+                var user_id = <?php echo $user_id; ?>; 
+                var article_id = <?php echo $article_id; ?>; 
 
-                // Send the selected value, data-correct attribute, user_id, and article_id to the PHP script using AJAX
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", "add-rating.php", true);
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState == 4 && xhr.status == 200) {
-                        // Handle the response from the PHP script if needed
                         console.log(xhr.responseText);
                     }
                 };
@@ -220,25 +199,19 @@ if ($submit) {
             });
         });
 
-        // Get the textarea element
-        // Get the textarea element and the submit button
         var reviewTextarea = document.getElementById("reviewText");
         var submitButton = document.getElementById("submitButton");
 
-        // Attach click event listener to the submit button
         submitButton.addEventListener('click', function () {
-            // Get the textarea value
             var reviewText = reviewTextarea.value;
-            var user_id = <?php echo $user_id; ?>; // Get user_id from PHP variable
-            var article_id = <?php echo $article_id; ?>; // Get article_id from PHP variable
+            var user_id = <?php echo $user_id; ?>; 
+            var article_id = <?php echo $article_id; ?>; 
 
-            // Send the textarea data, user_id, and article_id to the PHP script using AJAX
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "add-review.php", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && xhr.status == 200) {
-                    // Handle the response from the PHP script if needed
                     console.log(xhr.responseText);
                 }
             };

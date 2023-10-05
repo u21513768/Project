@@ -20,7 +20,6 @@ if (isset($_GET['user_id'])) {
     }
 
 } else {
-    // Handle the case where article_id or user_id is not set in the URL
     echo "User ID is not set.";
 }
 

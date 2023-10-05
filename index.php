@@ -69,14 +69,11 @@ if ($submit) {
         $res = mysqli_query($mysqli, $query);
         
         if ($res) {
-            // Get the ID of the newly created user
             $user_id = mysqli_insert_id($mysqli);
             
-            // Calculate the modulo and create image_name
-            $mod_number = $user_id % 10; // Change 10 to any number you desire for the modulo operation
+            $mod_number = $user_id % 5; 
             $image_name = $mod_number . '.jpg';
     
-            // Insert user_id and image_name into tbpfp table
             $insert_pfp_query = "INSERT INTO tbpfp (user_id, image_name) VALUES ('$user_id', '$image_name')";
             mysqli_query($mysqli, $insert_pfp_query);
     
@@ -108,7 +105,6 @@ if ($submit) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700,900|Open+Sans">
     <script>
-        // JavaScript function to display an alert
         function showAlert(message) {
             alert(message);
         }
