@@ -12,7 +12,7 @@ $pass = isset($_POST["pass"]) ? $_POST["pass"] : $_SESSION["pass"];
 //echo "email: " . $email . "\npassword: " . $pass;
 if ($email == null || $email == "" || $pass == null || $pass == "") {
 	header("Location: index.php");
-	exit; 
+	exit;
 }
 
 $query = "SELECT * FROM tbusers WHERE email = '$email' AND password = '$pass'";
@@ -27,10 +27,17 @@ if ($row == null) {
 
 $userid = $row["user_id"];
 $title = isset($_POST["articleName"]) ? $_POST["articleName"] : null;
-$author = isset($_POST["articleAuthor"]) ? $_POST["articleAuthor"] : null;
+$name = $row["name"];
+$surname = $row["surname"];
+$author = $name . " " . $surname; //isset($_POST["articleAuthor"]) ? $_POST["articleAuthor"] : null;
 $description = isset($_POST["articleDescription"]) ? $_POST["articleDescription"] : null;
-$date = null;//isset($_POST["articleDate"]) ? $_POST["articleDate"] : null;
+$date = date('Y-m-d H:i:s');
+; //isset($_POST["articleDate"]) ? $_POST["articleDate"] : null;
+$tags = isset($_POST["articleTags"]) ? $_POST["articleTags"] : null;
 
+if ($description !== null && $tags !== null) {
+	$description .= "\nHashtags: " . $tags;
+}
 $secondQuery = "INSERT INTO tbarticles (user_id, title, description, author, date) VALUES ('$userid', '$title', '$description', '$author', '$date');";
 $submitbutton = isset($_POST['submit']);
 
@@ -43,10 +50,9 @@ if ($submitbutton) {
 			// check if the upload size is less than the max allowed
 			if ($totalFileSize > $maxFileSize) {
 				/*echo '<div class="alert alert-danger mt-3" role="alert">
-								Your files exceed the limit of 2MB capacity
-								</div>';*/
+							Your files exceed the limit of 2MB capacity
+							</div>';*/
 			} else {
-				$date = date('Y-m-d H:i:s');
 				if (!empty($title) && !empty($description) && !empty($author) && !empty($date) && !empty($userid) || !($_FILES['picToUpload']['error'] == 4 || ($_FILES['picToUpload']['size'] == 0 && $_FILES['picToUpload']['error'] == 0))) {
 					$secondRes = mysqli_query($mysqli, $secondQuery);
 					if ($secondRes) {
@@ -54,7 +60,6 @@ if ($submitbutton) {
 						$fileName = $_FILES['picToUpload']['name'];
 						$thirdQuery = "INSERT INTO tbgallery (article_id, image_name) VALUES ('$articleid', '$fileName');";
 						/*echo '<div class="alert alert-primary mt-3" role="alert">
-											  The article has been created
 										  </div>';*/
 
 						$thirdRes = mysqli_query($mysqli, $thirdQuery);
@@ -83,15 +88,16 @@ if ($submitbutton) {
 					}
 				} else {
 					/*echo '<div class="alert alert-danger mt-3" role="alert">
-									   Empty or blank */
+								   Empty or blank */
 				}
 			}
 		}
 	} else {
 		/*echo '<div class="alert alert-danger mt-3" role="alert">
-				  The article co*/
+			  The article co*/
 	}
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -105,7 +111,7 @@ if ($submitbutton) {
 	<!--<link rel="stylesheet" type="text/css" href="style.css" />-->
 	<link rel="stylesheet" href="article-form.css">
 	<link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700,900|Open+Sans">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700,900|Open+Sans|Titillium+Web">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 	<meta charset="utf-8" />
@@ -117,14 +123,17 @@ if ($submitbutton) {
 <body>
 	<div class='container'>
 		<div class='sideSection'>
+
 			<?php
 			$query = "SELECT * FROM tbusers WHERE email = '$email' AND password = '$pass' ";
 			$res = $mysqli->query($query);
 			if ($row = mysqli_fetch_array($res)) {
+				$username = $row["username"];
+				$userid = $row["user_id"];
 				echo "<div class='header-info'>
 					<nav class='navbar fixed-top navbar-expand-lg navbar-dark px-3'>
-						<a class='navbar-brand' id='modal-click' href='profile.html'><i class='lni lni-user'></i></a> 
-						<a class='navbar-brand h1 active' href='profile.html'>" . $row['name'] . "</a>
+						<a class='navbar-brand' id='modal-click' href='profile.php?user_id=" . $userid . "'><i class='lni lni-user'></i></a>
+						<a class='navbar-brand h1 active' href='profile.php?user_id=" . $userid . "'>" . $username . "</a>
 						<div class='collapse navbar-collapse' id='navbarNavAltMarkup'>
 							<div class='navbar-nav px-2'>
 								<a class='nav-item nav-link' href='index.php'>Log Out</a>
@@ -133,30 +142,34 @@ if ($submitbutton) {
 					</nav>
 				</div>";
 
-
-				echo "<div class='article-info'><form action='article-form.php' method='POST' enctype='multipart/form-data'>
-						<div class='form-group'>
-							
+				echo "<div class='article-info'>
+						<form action='article-form.php' method='POST' enctype='multipart/form-data'>
+							<div class='form-group'>
+								
+								<input type='hidden' class='form-control' name='email' value='" . $email . "' />
+								<input type='hidden' class='form-control' name='pass' value='" . $pass . "' />
+								<label for='articleName'>Article Name:</label><br>
+								<input type='text' class='form-control' name='articleName' /><br>							
+								<label for='articleDescription'>Article Description:</label><br>
+								<textarea class='form-control' id='description' name='articleDescription' rows='10'></textarea><br/>
+								<label for='articleTags'>Hashtags:</label><br>
+								<input type='text' class='form-control' name='articleTags' /><br>
+								<label for='picToUpload'>Choose image for the article:</label>
+								<input type='file' class='form-control' name='picToUpload' id='picToUpload' accept='image/*'  /><br/>	<!--multiple='multiple'-->							
+								<input type='submit' class='btn btn-primary' value='Upload article' name='submit' />
+							</div>
+							<br/>
+						</form>
+						<form action='go-to-articles.php' method='POST'>
 							<input type='hidden' class='form-control' name='email' value='" . $email . "' />
 							<input type='hidden' class='form-control' name='pass' value='" . $pass . "' />
-							<label for='articleName'>Article Name:</label><br>
-							<input type='text' class='form-control' name='articleName' /><br>	
-							<label for='articleAuthor'>Article Author:</label><br>							
-							<input type='text' class='form-control' name='articleAuthor' /><br>								
-							<label for='articleDescription'>Article Description:</label><br>
-							<input type='text' class='form-control' name='articleDescription' /><br>
-
-							<!--<label for 'articleDate'>Article date:</label><br>
-							<input type='date' class='form-control' name='articleDate' /><br>-->
-
-							<input type='file' class='form-control' name='picToUpload' id='picToUpload' accept='image/*'  /><br/>	<!--multiple='multiple'-->							
-
-							<input type='submit' class='btn-standard' value='Upload article' name='submit' />
-						</div>
-					</form>
+							<input type='submit' class='btn btn-primary' value='Return' name='return'>
+						</form>
 					</div>";
 			}
 			?>
+			
+
 		</div>
 
 		<div class="row articleGalleryContainer">
@@ -173,9 +186,9 @@ if ($submitbutton) {
 						$image_query = "SELECT * FROM tbgallery WHERE article_id = '$article_id'";
 						$image_res = mysqli_query($mysqli, $image_query);
 						$image_row = mysqli_fetch_array($image_res);
-						$image_src = $image_row['image_name'];
-						$image_src = $image_src == ("" || null) ? "default.jpg" : $image_src;
-
+						$image_src = isset($image_row['image_name']) ? $image_row['image_name'] : 'default.jpg';
+						//$image_src = $image_src == ("" || null) ? "default.jpg" : $image_src;
+				
 						echo '
 					<div class="col-md-12 mb-12">
 						<div class="card">

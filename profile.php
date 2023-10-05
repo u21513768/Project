@@ -30,7 +30,7 @@ if (isset($_GET['user_id'])) {
     $birthday = $row["birthday"];
 
     $friendsQuery = "SELECT tbusers.* FROM tbusers
-    INNER JOIN tbfriends ON tbusers.user_id = tbfriends.user_id
+    INNER JOIN tbfriends ON tbusers.user_id = tbfriends.follow_id
     WHERE tbfriends.user_id = '$user_id'";
     $friendsResult = mysqli_query($mysqli, $friendsQuery);
 
@@ -52,6 +52,13 @@ if (isset($_GET['user_id'])) {
         // Handle the query error
         echo "Error: " . mysqli_error($mysqli);
     }
+
+    $pfp_query = "SELECT image_name FROM tbpfp WHERE user_id = '$user_id'";
+    $pfp_res = mysqli_query($mysqli, $pfp_query);
+    $pfp_row = mysqli_fetch_array($pfp_res);
+    $user_image = $pfp_row ? $pfp_row['image_name'] : 'default.jpg'; // Default image if no entry is found
+    // Create an image tag with user's picture and username as a link
+
 } else {
     // Handle the case where article_id or user_id is not set in the URL
     echo "Article ID or User ID is not set.";
@@ -79,11 +86,12 @@ if ($submit) {
     <!--<link rel="stylesheet" type="text/css" href="style.css" />-->
     <link rel="stylesheet" href="articles.css">
     <link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700,900|Open+Sans">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700,900|Open+Sans|Titillium+Web">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <meta charset="utf-8" />
     <meta name="author" content="Name Surname">
+    <link rel="stylesheet" href="friend.css">
     <!-- Quintin d'Hotman de Villiers u21513768 -->
 
 </head>
@@ -108,28 +116,34 @@ if ($submit) {
     </div>
     <div class='container'>
         <div class='sideSection'>
-
-            <form id="redirectForm" action="article-details.php" method="POST">
-                <input type="hidden" class="form-control" name="email" value="<?php echo $email; ?>" />
-                <input type="hidden" class="form-control" name="pass" value="<?php echo $pass; ?>" />
-                <input type="submit" class="btn btn-primary" value="Return" name="return">
-            </form>
-            <h4>
-                <?php echo $username; ?>
-            </h4>
-            <h4>
+            <?php echo "<img src='gallery/$user_image' alt='User Image' class='user-image' width='100' height='100'>"; ?>
+            <span class='username'>
+                <h2 id='username'>
+                    <?php echo $username; ?>
+                </h2>
+            </span>
+            <br />
+            <br />
+            <h6>
+                <strong>Name: </strong>
                 <?php echo $name; ?>
-            </h4>
-            <h4>
+            </h6>
+            <h6>
+                <strong>Surname: </strong>
                 <?php echo $surname; ?>
-            </h4>
-            <h4>
+            </h6>
+            <h6>
+                <strong>Email: </strong>
                 <?php echo $email; ?>
-            </h4>
-            <h4>
+            </h6>
+            <h6>
+                <strong>Birthday: </strong>
                 <?php echo $birthday; ?>
-            </h4>
-            <hr/>
+            </h6>
+            <br />
+            <button id="editBtn" class="btn" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+            <!--<button id="editBtn" class="btn">Edit</button> -->
+            <hr />
             <div class="col-6">
                 <h5>Users followed by You
                 </h5><br />
@@ -222,8 +236,87 @@ if ($submit) {
                     <span class="visually-hidden">Next</span>
                 </button>
             </div>
+
+            <form id="redirectForm" action="article-details.php" method="POST">
+                <input type="hidden" class="form-control" name="email" value="<?php echo $email; ?>" />
+                <input type="hidden" class="form-control" name="pass" value="<?php echo $pass; ?>" />
+                <input type="submit" class="btn btn-primary" value="Return" name="return">
+            </form>
         </div>
     </div>
+
+    <!-- Modal for Edit User Info -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit User Information</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Modal Body (Edit Form) -->
+                <div class="modal-body">
+                    <!-- Add your edit form fields here -->
+                    <form id="editForm">
+                        <!-- Edit form fields go here -->
+                        <div class="mb-3">
+                            <label for="editUsername" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="editUsername" name="editUsername"
+                                value="<?php echo $username; ?>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="editEmail" name="editEmail"
+                                value="<?php echo $email; ?>">
+                        </div>
+                        <input type="hidden" id="userIdInput" name="userId" value="<?php echo $user_id; ?>"> <!-- Add this line -->
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Wait for the document to be fully loaded
+        $(document).ready(function () {
+            // When Edit button is clicked, show the modal
+            $('#editBtn').click(function () {
+                $('#editModal').modal('show');
+            });
+
+            // Submit the edit form
+            // Submit the edit form
+            $('#editForm').submit(function (event) {
+                event.preventDefault();
+
+                // Get form data and perform an AJAX request to update user info in the database
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: 'edit-user.php', // Specify the PHP script to handle form submission and database update
+                    data: formData,
+                    success: function (response) {
+                        // Handle success response, for example, show a success message or update the page
+                        console.log('User info updated successfully');
+                        alert('User info updated successfully');
+                        // Optionally, close the modal after successful update
+                        $('#editModal').modal('hide');
+                    },
+                    error: function (error) {
+                        // Handle error response, for example, display an error message to the user
+                        console.error('Error updating user info', error);
+                        alert('Error updating user info', error);
+                    }
+                });
+            });
+
+        });
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

@@ -65,24 +65,35 @@ if ($submit) {
 
     if ($name != null && $name != "" && $email != null && $email != "" && $pass != null && $pass != "" && $birthday != null && $birthday != "" && $surname != null && $surname != "") {
         $query = "INSERT INTO tbusers (username, name, surname, email, birthday, password) VALUES ('$username', '$name', '$surname', '$email', '$birthday', '$pass');";
-
-        $res = mysqli_query($mysqli, $query) == TRUE;
+    
+        $res = mysqli_query($mysqli, $query);
+        
         if ($res) {
+            // Get the ID of the newly created user
+            $user_id = mysqli_insert_id($mysqli);
+            
+            // Calculate the modulo and create image_name
+            $mod_number = $user_id % 10; // Change 10 to any number you desire for the modulo operation
+            $image_name = $mod_number . '.jpg';
+    
+            // Insert user_id and image_name into tbpfp table
+            $insert_pfp_query = "INSERT INTO tbpfp (user_id, image_name) VALUES ('$user_id', '$image_name')";
+            mysqli_query($mysqli, $insert_pfp_query);
+    
             $alertMessage = "Your account has been created successfully.";
             session_start();
-
+    
             $_SESSION["email"] = $email;
             $_SESSION["pass"] = $pass;
             header("Location: articles.php");
             exit; // Make sure to exit after redirecting
-        }
-        else {
+        } else {
             $alertMessage = "Failed to create account.";
         }
-    }
-    else {
+    } else {
         $alertMessage = "Please fill in all details";
     }
+    
 } 
 ?>
 

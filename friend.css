@@ -1,0 +1,16 @@
+.user-image {
+    display: inline-block;
+    vertical-align: middle; /* Align the image vertically in the middle */
+    margin-right: 10px; /* Adjust the right margin to create space between image and text */
+}
+
+.username {
+    display: inline-block;
+    vertical-align: middle; /* Align the username vertically in the middle */
+   
+}
+
+#username {
+    font-weight: bolder;
+    padding: 10px; 
+}

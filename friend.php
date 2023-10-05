@@ -22,6 +22,7 @@ if (isset($_GET['user_id']) && isset($_GET['friend_id'])) {
 
     $email = $row["email"];
     $pass = $row["password"];
+    $username = $row["username"];
 
     $friendQuery = "SELECT * FROM tbusers WHERE user_id = '$friend_id'";
     $friendResult = mysqli_query($mysqli, $friendQuery);
@@ -37,6 +38,14 @@ if (isset($_GET['user_id']) && isset($_GET['friend_id'])) {
         $areFriends = false;
         $followStatus = "Follow";
     }
+
+    $pfp_query = "SELECT image_name FROM tbpfp WHERE user_id = '$friend_id'";
+    $pfp_res = mysqli_query($mysqli, $pfp_query);
+    $pfp_row = mysqli_fetch_array($pfp_res);
+    $friend_image = $pfp_row ? $pfp_row['image_name'] : 'default.jpg'; // Default image if no entry is found
+
+    // Create an image tag with user's picture and username as a link
+
 
     $friendsQuery = "SELECT tbusers.* FROM tbusers
     INNER JOIN tbfriends ON tbusers.user_id = tbfriends.user_id
@@ -88,8 +97,9 @@ if ($submit) {
         integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <!--<link rel="stylesheet" type="text/css" href="style.css" />-->
     <link rel="stylesheet" href="articles.css">
+    <link rel="stylesheet" href="friend.css">
     <link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700,900|Open+Sans">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700,900|Open+Sans|Titillium+Web">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <meta charset="utf-8" />
@@ -99,18 +109,22 @@ if ($submit) {
 </head>
 
 <body>
+    <div class='header-info'>
+        <nav class='navbar navbar-expand-lg navbar-dark px-3'>
+            <a class='navbar-brand' id='modal-click' href="profile.php?user_id=<?php echo $user_id; ?>"><i
+                    class='lni lni-user'></i></a>
+            <a class='navbar-brand h1 active' href="profile.php?user_id=<?php echo $user_id; ?>">
+                <?php echo $username; ?>
+            </a>
+            <div class='collapse navbar-collapse' id='navbarNavAltMarkup'>
+                <div class='navbar-nav px-2'>
+                    <a class='nav-item nav-link' href='index.php'>Log Out</a>
+                </div>
+            </div>
+        </nav>
+    </div>
     <div class='container'>
         <div class='sideSection'>
-            <?php
-            echo "<a class='btn btn-primary' href='users.php?user_id=$user_id'>Return</a><br>";
-            ?>
-            <br>
-            <!-- Add a Follow button with an id for JavaScript -->
-            <button id="followBtn" class="btn btn-primary">Follow</button>
-            <br><br>
-            <!-- Send Message button -->
-            <button id="sendMessageBtn" class="btn btn-primary">Send Message</button>
-
             <div>
                 <?php
                 if ($friendRow) {
@@ -118,18 +132,30 @@ if ($submit) {
                     $friendSurname = $friendRow["surname"];
                     $friendEmail = $friendRow["email"];
                     $friendBirthday = $friendRow["birthday"];
-
+                    $friendUsername = $friendRow["username"];
+                    $friendImage = "gallery/$friend_image"; // Assuming $friend_image holds the image file name
+                
                     // Display friend user details
-                    echo "Friend Name: " . $friendName . "<br>";
-                    echo "Friend Surname: " . $friendSurname . "<br>";
-                    echo "Friend Email: " . $friendEmail . "<br>";
-                    echo "Friend Birthday: " . $friendBirthday . "<br>";
+                    echo "<img src='$friendImage' alt='User Image' class='user-image' width='100' height='100'>";
+                    echo "<span class='username'><h2 id='username'>$friendUsername</h2></span>";
+                    echo "<br/><hr/><h4>User Info:</h4><strong>Name:</strong> $friendName<br>";
+                    echo "<strong>Surname:</strong> $friendSurname<br>";
+                    echo "<strong>Email:</strong> $friendEmail<br>";
+                    echo "<strong>Birthday:</strong> $friendBirthday<br>";
+
                 } else {
                     echo "Friend user not found.";
                 }
+
+
                 ?>
+                <br />
+                <div id="friendBtns">
+                    <button id="followBtn" class="btn">Follow</button> <span id="line">|</span>
+                    <button id="sendMessageBtn" class="btn">Send Message</button>
+                </div>
             </div>
-            <hr/>
+            <hr />
             <div class="col-6">
                 <?php if ($areFriends): ?>
                     <h5>Users followed by
@@ -147,7 +173,7 @@ if ($submit) {
                         <p>This user isn't followed by anyone.</p>
                     <?php endif; ?>
                 <?php else: ?>
-                    <p>You are not following this user, so you cannot see the users they follow.</p>
+                    <p>You are not following this user, so you cannot see who follows or is followed by them.</p>
                 <?php endif; ?>
             </div>
 
@@ -168,7 +194,7 @@ if ($submit) {
                         <p>This user follows no one.</p>
                     <?php endif; ?>
                 <?php else: ?>
-                    <p>This user isn't following anyone.</p>
+                    <p></p>
                 <?php endif; ?>
             </div>
 
@@ -235,6 +261,10 @@ if ($submit) {
                 </button>
             </div>
         </div>
+        <?php
+        echo "<a class='btn btn-primary' href='users.php?user_id=$user_id'>Return</a><br>";
+        ?>
+        <br>
     </div>
     <!-- Message Modal -->
     <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
@@ -319,10 +349,14 @@ if ($submit) {
         });
 
         var sendMessageBtn = document.getElementById("sendMessageBtn");
-        if (<?php echo $areFriends ? 'true' : 'false'; ?>) {
+        var line = document.getElementById("line");
+        if (<?php echo $areFriends ? 'true' : 'false'; ?>) {//
             sendMessageBtn.style.display = 'block';
         } else {
             sendMessageBtn.style.display = 'none';
+            sendMessageBtn.style.visibility = "hidden";
+            line.style.display = 'none';
+            line.style.visibility = "hidden";
         }
 
         var followBtn = document.getElementById("followBtn");

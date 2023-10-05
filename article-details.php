@@ -60,7 +60,7 @@ if ($submit) {
     <!--<link rel="stylesheet" type="text/css" href="style.css" />-->
     <link rel="stylesheet" href="articles.css">
     <link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700,900|Open+Sans">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700,900|Open+Sans|Titillium+Web">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <meta charset="utf-8" />
@@ -117,9 +117,9 @@ if ($submit) {
                         echo '<div >
                                     <div class="card-body">
                                         <h5 class="card-title">' . $article['title'] . '</h5>
-                                        <p class="card-text">' . $article['description'] . '</p>
+                                        <p class="card-text article-desc">' . $article['description'] . '</p>
                                         <div class="alert alert-info mt-3" id="likeStatusAlert1" style="display: none;"></div>
-                                        <p class="card-text">' . $article['article_text'] . '</p>
+                                        <p class="card-text article-text">' . $article['article_text'] . '</p>
                                         <p class="card-text"><small class="text-muted">' . $article['author'] . ' - ' . $article['date'] . '</small></p><hr/>
                                         <p>Did you enjoy this article?</p>
                                         <div class="form-check" data-correct="true">
@@ -151,7 +151,7 @@ if ($submit) {
                 }
                 ?>
             </div>
-
+                <hr/>
             <h2>Reviews</h2>
             <div id="carousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
@@ -169,7 +169,7 @@ if ($submit) {
                             echo '<div class="col-md-4 mb-3">
                         <div class="card mx-2">
                             <div class="card-body">
-                                <h5 class="card-title">Written by: <small>' . htmlspecialchars($review['username']) . '</small></h5>
+                                <h5 class="card-title"><small>' . htmlspecialchars($review['username']) . ' says:</small></h5>
                                 <p class="card-text">' . htmlspecialchars($review['review']) . '</p>
                             </div>
                         </div>

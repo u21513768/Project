@@ -22,6 +22,7 @@ if (isset($_GET['user_id'])) {
 
     $email = $row["email"];
     $pass = $row["password"];
+    $username = $row["username"];
 
     $query = "SELECT * FROM tbusers WHERE user_id != '$user_id'";
     $res = mysqli_query($mysqli, $query);
@@ -54,7 +55,7 @@ if ($submit) {
     <!--<link rel="stylesheet" type="text/css" href="style.css" />-->
     <link rel="stylesheet" href="articles.css">
     <link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700,900|Open+Sans">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700,900|Open+Sans|Titillium+Web">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <meta charset="utf-8" />
@@ -72,14 +73,21 @@ if ($submit) {
                 <input type="hidden" class="form-control" name="pass" value="<?php echo $pass; ?>" />
                 <input type="submit" class="btn btn-primary" value="Return" name="return">
             </form>
-
+            <br/>
             <div>
                 <?php
                 if ($res) {
                     while ($row = mysqli_fetch_array($res)) {
-                        $username = $row["username"];
                         $friend_id = $row["user_id"];
-                        // Create a link with user_id as a query parameter
+                        $username = $row["username"];
+                        // Fetch image name from tbpfp table based on friend_id
+                        $pfp_query = "SELECT image_name FROM tbpfp WHERE user_id = '$friend_id'";
+                        $pfp_res = mysqli_query($mysqli, $pfp_query);
+                        $pfp_row = mysqli_fetch_array($pfp_res);
+                        $friend_image = $pfp_row ? $pfp_row['image_name'] : 'default.jpg'; // Default image if no entry is found
+                
+                        // Create an image tag with user's picture and username as a link
+                        echo "<hr/><img src='gallery/$friend_image' alt='User Image' class='user-image' width='50' height='50'>";
                         echo "<a href='friend.php?user_id=$user_id&&friend_id=$friend_id'>$username</a><br>";
                     }
                 } else {
@@ -87,6 +95,7 @@ if ($submit) {
                 }
                 ?>
             </div>
+
         </div>
     </div>
 

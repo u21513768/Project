@@ -52,7 +52,7 @@ if ($submit) {
     <!--<link rel="stylesheet" type="text/css" href="style.css" />-->
     <link rel="stylesheet" href="articles.css">
     <link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700,900|Open+Sans">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:700,900|Open+Sans|Titillium+Web">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <meta charset="utf-8" />
@@ -77,7 +77,10 @@ if ($submit) {
                     <a class='nav-item nav-link' href='index.php'>Log Out</a>
                 </div>
                 <form id="redirectForm" action="article-form.php" method="POST">
-                    <input type="submit" class="btn btn-outline-light" value="Add article" name="add-form">
+                    <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>" />
+                    <input type="hidden" name="pass" value="<?php echo htmlspecialchars($pass); ?>" />
+                    <input type="submit" id="add-article" class="nav-item nav-link btn" value="Add article"
+                        name="add-form">
                 </form>
             </div>
         </nav>
@@ -91,6 +94,7 @@ if ($submit) {
                 <option value="category2">Category 2</option>
                 <option value="category3">Category 3</option>
             </select>
+            <br/>
             <div class="row articleGalleryContainer">
                 <h1>Latest Global Articles</h1>
                 <hr />
@@ -123,7 +127,7 @@ if ($submit) {
 						<div class="card">
 						<div id="logo"  class="card-img-top"><img src="./gallery/' . ($image_src ?? 'default.jpg') . '"  class="card-img-top" alt="Article Image"></div>
 							<div class="card-body">
-                            <button class="btn btn-primary add-to-list-btn" data-article-id="' . $article_id . '">Add to List</button>
+                            <button class="btn add-to-list-btn" data-article-id="' . $article_id . '"><i class="lni lni-more"></i></button>
                                 <h5 class="card-title">
                                     <a href="article-details.php?article_id=' . $article_id . '&user_id=' . $userid . '">' . $row2['title'] . '</a>
                                 </h5>
@@ -135,9 +139,10 @@ if ($submit) {
                     }
                     ?>
                 </div>
+                <div class="scroll">
+                    <p>Scroll<i class="lni lni-arrow-right arrow-icon"></i></p>
+                </div>
             </div>
-            <br />
-            <hr />
             <br />
             <div class="row articleGalleryContainer">
                 <h1>Your Articles</h1>
@@ -172,8 +177,10 @@ if ($submit) {
 						<div class="card">
 						<div id="logo"  class="card-img-top"><img src="./gallery/' . ($image_src ?? 'default.jpg') . '"  class="card-img-top" alt="Article Image"></div>
 							<div class="card-body">
-                            <button class="btn btn-primary add-to-list-btn" data-article-id="' . $article_id . '" >Add to List</button>
-								<h5 class="card-title">' . $row2['title'] . '</h5>
+                            <button class="btn add-to-list-btn" data-article-id="' . $article_id . '"><i class="lni lni-more"></i></button>
+                            <h5 class="card-title">
+                            <a href="article-details.php?article_id=' . $article_id . '&user_id=' . $userid . '">' . $row2['title'] . '</a>
+                        </h5>
 								<p class="card-text">' . $row2['description'] . '</p>
 								<p class="card-text"><small class="text-muted">' . $row2['author'] . ' - ' . $row2['date'] . '</small></p>
 							</div>
@@ -182,10 +189,10 @@ if ($submit) {
                     }
                     ?>
                 </div>
+                <div class="scroll">
+                    <p>Scroll<i class="lni lni-arrow-right arrow-icon"></i></p>
+                </div>
             </div>
-
-            <br />
-            <hr />
             <br />
             <div class="row articleGalleryContainer">
                 <h1>Friend Articles</h1>
@@ -237,7 +244,10 @@ if ($submit) {
                                     <div class="card">
                                     <div id="logo"  class="card-img-top"><img src="./gallery/' . ($image_src ?? 'default.jpg') . '"  class="card-img-top" alt="Article Image"></div>
                                         <div class="card-body">
-                                            <h5 class="card-title">' . $row2['title'] . '</h5>
+                                        <button class="btn add-to-list-btn" data-article-id="' . $article_id . '"><i class="lni lni-more"></i></button>
+                                        <h5 class="card-title">
+                                        <a href="article-details.php?article_id=' . $article_id . '&user_id=' . $userid . '">' . $row2['title'] . '</a>
+                                    </h5>
                                             <p class="card-text">' . $row2['description'] . '</p>
                                             <p class="card-text"><small class="text-muted">' . $row2['author'] . ' - ' . $row2['date'] . '</small></p>
                                         </div>
@@ -252,6 +262,9 @@ if ($submit) {
                     }
 
                     ?>
+                </div>
+                <div class="scroll">
+                    <p>Scroll<i class="lni lni-arrow-right arrow-icon"></i></p>
                 </div>
             </div>
             <?php
@@ -305,7 +318,10 @@ if ($submit) {
                                     echo '<div class="card">';
                                     echo '<div id="logo" class="card-img-top"><img src="./gallery/' . $image_src . '" class="card-img-top" alt="Article Image"></div>';
                                     echo '<div class="card-body">';
-                                    echo '<h5 class="card-title">' . $title . '</h5>';
+                                    echo ' <button class="btn add-to-list-btn" data-article-id="' . $articleId . '"><i class="lni lni-more"></i></button>
+                                        <h5 class="card-title">
+                                            <a href="article-details.php?article_id=' . $articleId . '&user_id=' . $userid . '">' . $title . '</a>
+                                        </h5>';
                                     echo '<p class="card-text">' . $description . '</p>';
                                     echo '<p class="card-text"><small class="text-muted">' . $author . ' - ' . $date . '</small></p>';
                                     echo '</div>';
@@ -315,18 +331,18 @@ if ($submit) {
                                 echo "Error: " . mysqli_error($mysqli);
                             }
                         }
+
                     } else {
                         echo "Error: " . mysqli_error($mysqli);
                     }
 
                     echo '</div>';
-                    echo '</div>';
+                    echo '</div><br/>';
                 }
             } else {
                 echo "Error: " . mysqli_error($mysqli);
             }
 
-            // Rest of your code...
             ?>
 
 
