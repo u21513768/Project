@@ -37,7 +37,7 @@ $date = date('Y-m-d H:i:s');
 $tags = isset($_POST["articleTags"]) ? $_POST["articleTags"] : null;
 
 if ($description !== null && $tags !== null) {
-	$description .= "\nHashtags: " . $tags;
+	$description .= "\n" . $tags;
 }
 $secondQuery = "INSERT INTO tbarticles (user_id, title, description, author, date, article_text) VALUES ('$userid', '$title', '$description', '$author', '$date', '$text');";
 $submitbutton = isset($_POST['submit']);

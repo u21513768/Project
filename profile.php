@@ -156,7 +156,7 @@ if ($submit) {
                         <?php endforeach; ?>
                     </ul>
                 <?php else: ?>
-                    <p>You aren't followed by anyone.</p>
+                    <p>You follow no one.</p>
                 <?php endif; ?>
             </div>
 
@@ -172,7 +172,7 @@ if ($submit) {
                         <?php endforeach; ?>
                     </ul>
                 <?php else: ?>
-                    <p>You follow no one.</p>
+                    <p>You aren't followed by anyone.</p>
                 <?php endif; ?>
             </div>
 
@@ -201,17 +201,21 @@ if ($submit) {
                                 $author = $article["author"];
                                 $date = $article["date"];
 
+                                // Inside the loop where you create article cards
                                 echo '<div class="col-md-4 mb-3">
-                                    <div class="card mx-2">
-                                        <div class="card-body">
-                                            <h5 class="card-title">
-                                                <a href="article-details.php?article_id=' . $article_id . '&user_id=' . $user_id . '">' . $title . '</a>
-                                            </h5>
-                                            <p class="card-text">' . $description . '</p>
-                                            <p class="card-text"><small class="text-muted">' . $author . ' - ' . $date . '</small></p>
+                                        <div class="card mx-2">
+                                            <button type="button" class="btn close" aria-label="Close" data-article-id="' . $article_id . '">
+                                                <span aria-hidden="true"><i class="lni lni-trash-can"></i></span>
+                                            </button>
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    <a href="article-details.php?article_id=' . $article_id . '&user_id=' . $user_id . '">' . $title . '</a>
+                                                </h5>
+                                                <p class="card-text">' . $description . '</p>
+                                                <p class="card-text"><small class="text-muted">' . $author . ' - ' . $date . '</small></p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>';
+                                    </div>';
                             }
 
                             echo '</div></div>';
@@ -260,7 +264,8 @@ if ($submit) {
                             <input type="email" class="form-control" id="editEmail" name="editEmail"
                                 value="<?php echo $email; ?>">
                         </div>
-                        <input type="hidden" id="userIdInput" name="userId" value="<?php echo $user_id; ?>"> <!-- Add this line -->
+                        <input type="hidden" id="userIdInput" name="userId" value="<?php echo $user_id; ?>">
+                        <!-- Add this line -->
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </form>
                 </div>
@@ -281,7 +286,7 @@ if ($submit) {
                 var formData = $(this).serialize();
                 $.ajax({
                     type: 'POST',
-                    url: 'edit-user.php', /
+                    url: 'edit-user.php',
                     data: formData,
                     success: function (response) {
                         console.log('User info updated successfully');
@@ -293,7 +298,28 @@ if ($submit) {
                         alert('Error updating user info', error);
                     }
                 });
-            });
+        });
+
+        $('.close').click(function () {
+            var articleId = $(this).data('article-id');
+            var confirmDelete = confirm("You are about to delete this article.\nThis action cannot be undone.\nAre you sure?");
+            if (confirmDelete) {
+                $.ajax({
+                    type: 'POST',
+                    url: 'delete-article.php',
+                    data: { article_id: articleId },
+                    success: function (response) {
+                        console.log('Article deleted successfully');
+                        alert('Article deleted successfully');
+                        $(this).closest('.col-md-4').remove();
+                    },
+                    error: function (error) {
+                        console.error('Error deleting article', error);
+                        alert('Error deleting article', error);
+                    }
+                });
+            }
+        });
 
         });
     </script>
